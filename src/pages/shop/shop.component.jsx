@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Route } from "react-router-dom";
 import { connect } from "react-redux";
 
@@ -13,43 +13,36 @@ import { selectIsCollectionFetching } from "../../redux/shop/shop.selectors";
 const CollectionsOverviewWithSpinner = WithSpinner(CollectionsOverview);
 const CollectionPageWithSpinner = WithSpinner(CollectionPage);
 
-class ShopPage extends React.Component {
+const ShopPage = ({ fetchCollectionsStartAsync, match, isFetching }) => {
    //moved async fetching to redux so can use in multiple places without repeating
-   componentDidMount() {
-      const { fetchCollectionsStartAsync } = this.props;
+   useEffect(() => {
       fetchCollectionsStartAsync();
-   }
+   }, [fetchCollectionsStartAsync]); //fetchCollectionsStartAsync is passed into [] to avoid waring
 
-   render() {
-      //very interesting issue caused due to init of state
-      //has to do with [] -> truthy
-      const { match, isFetching } = this.props;
-      console.log(isFetching);
-      return (
-         <div className="shop-page">
-            <Route
-               exact
-               path={`${match.path}`}
-               render={(props) => (
-                  <CollectionsOverviewWithSpinner
-                     isLoading={isFetching}
-                     {...props}
-                  />
-               )}
-            />
-            <Route
-               path={`${match.path}/:collectionId`}
-               render={(props) => (
-                  <CollectionPageWithSpinner
-                     isLoading={isFetching}
-                     {...props}
-                  />
-               )}
-            />
-         </div>
-      );
-   }
-}
+   //very interesting issue caused due to init of state
+   //has to do with [] -> truthy
+   console.log(isFetching);
+   return (
+      <div className="shop-page">
+         <Route
+            exact
+            path={`${match.path}`}
+            render={(props) => (
+               <CollectionsOverviewWithSpinner
+                  isLoading={isFetching}
+                  {...props}
+               />
+            )}
+         />
+         <Route
+            path={`${match.path}/:collectionId`}
+            render={(props) => (
+               <CollectionPageWithSpinner isLoading={isFetching} {...props} />
+            )}
+         />
+      </div>
+   );
+};
 
 const mapStateToProps = createStructuredSelector({
    isFetching: selectIsCollectionFetching,
