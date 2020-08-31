@@ -21,7 +21,10 @@ class ShopPage extends React.Component {
    }
 
    render() {
+      //very interesting issue caused due to init of state
+      //has to do with [] -> truthy
       const { match, isFetching } = this.props;
+      console.log(isFetching);
       return (
          <div className="shop-page">
             <Route
