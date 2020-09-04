@@ -8,28 +8,48 @@ import CartItem from "../cart-item/cart-item.component";
 import "./cart-dropdown.styles.scss";
 import { toggleCartHidden } from "../../redux/cart/cart.actions";
 import { createStructuredSelector } from "reselect";
-import { selectCartItems } from "../../redux/user/user.selectors";
+import {
+   selectCartItems,
+   selectCurrentUser,
+} from "../../redux/user/user.selectors";
 
-const CartDropdown = ({ cartItems, history, toggleCartHidden }) => (
+const CartDropdown = ({
+   cartItems,
+   history,
+   toggleCartHidden,
+   currentUser,
+}) => (
    <div className="cart-dropdown">
       <div className="cart-items">
          {cartItems.map((cartItem) => (
             <CartItem key={cartItem.id} item={cartItem} />
          ))}
       </div>
-      <CustomButton
-         onClick={() => {
-            history.push("/checkout");
-            toggleCartHidden();
-         }}
-      >
-         GO TO CHECKOUT
-      </CustomButton>
+      {currentUser ? (
+         <CustomButton
+            onClick={() => {
+               history.push("/checkout");
+               toggleCartHidden();
+            }}
+         >
+            GO TO CHECKOUT
+         </CustomButton>
+      ) : (
+         <CustomButton
+            onClick={() => {
+               history.push("/signin");
+               toggleCartHidden();
+            }}
+         >
+            SIGIN TO SEE CART
+         </CustomButton>
+      )}
    </div>
 );
 
 const mapStateToProps = createStructuredSelector({
    cartItems: selectCartItems,
+   currentUser: selectCurrentUser,
 });
 
 const mapDispathToProps = (dispatch) => ({

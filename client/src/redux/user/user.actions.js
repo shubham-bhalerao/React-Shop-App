@@ -12,6 +12,7 @@ export const setCurrentUser = (user) => ({
 
 export const addItem = (user, cartItemToAdd) => {
    return async (dispatch) => {
+      if (!user) return;
       dispatch({
          type: UserActionTypes.ADD_ITEM,
          payload: cartItemToAdd,
@@ -44,6 +45,7 @@ export const addItem = (user, cartItemToAdd) => {
 
 export const removeItem = (user, cartItemToRemove) => {
    return async (dispatch) => {
+      if (!user) return;
       dispatch({
          type: UserActionTypes.REMOVE_ITEM,
          payload: cartItemToRemove,
@@ -75,6 +77,7 @@ export const removeItem = (user, cartItemToRemove) => {
 
 export const clearItemFromCart = (user, cartItemToRemove) => {
    return async (dispatch) => {
+      if (!user) return;
       dispatch({
          type: UserActionTypes.CLEAR_ITEM_FROM_CART,
          payload: cartItemToRemove,

@@ -1,14 +1,15 @@
 import React from "react";
 import CustomButton from "../custom-button/custom-button.component";
+import { withRouter } from "react-router-dom";
 import { createStructuredSelector } from "reselect";
-import { selectCurrentUser } from "../../redux/user/user.selectors";
 
 import { connect } from "react-redux";
 
 import "./collection-item.styles.scss";
 import { addItem } from "../../redux/user/user.actions";
+import { selectCurrentUser } from "../../redux/user/user.selectors";
 
-const CollectionItem = ({ item, addItem, currentUser }) => {
+const CollectionItem = ({ item, addItem, currentUser, history }) => {
    const { name, price, imageUrl } = item;
    return (
       <div className="collection-item">
@@ -22,9 +23,15 @@ const CollectionItem = ({ item, addItem, currentUser }) => {
             <span className="name">{name}</span>
             <span className="price">{price}</span>
          </div>
-         <CustomButton onClick={() => addItem(currentUser, item)} inverted>
-            ADD TO CART
-         </CustomButton>
+         {currentUser ? (
+            <CustomButton onClick={() => addItem(currentUser, item)} inverted>
+               ADD TO CART
+            </CustomButton>
+         ) : (
+            <CustomButton onClick={() => history.push("/signin")} inverted>
+               SIGNIN TO SHOP
+            </CustomButton>
+         )}
       </div>
    );
 };
@@ -37,4 +44,6 @@ const mapDispathToProps = (dispatch) => ({
    addItem: (user, item) => dispatch(addItem(user, item)),
 });
 
-export default connect(mapStateToProps, mapDispathToProps)(CollectionItem);
+export default withRouter(
+   connect(mapStateToProps, mapDispathToProps)(CollectionItem)
+);
