@@ -10,10 +10,14 @@ import HomePage from "./pages/homepage/homepage.component";
 import ShopPage from "./pages/shop/shop.component";
 import SignInAndSignUpPage from "./pages/sign-in-and-sign-up/sign-in-and-sign-up.component";
 import CheckoutPage from "./pages/checkout/checkout.component";
+import UserProfilePage from "./pages/user-profile/user-profile.component";
 
 import Header from "./components/header/header.component";
 import { auth, createUserProfileDocument } from "./firebase/firebase.utils";
 import { selectCurrentUser } from "./redux/user/user.selectors";
+import WithSpinner from "./components/with-spinner/with-spinner.component";
+
+const UserProfilePageWithSpinner = WithSpinner(UserProfilePage);
 
 class App extends React.Component {
    unsubscribeFromAuth = null;
@@ -39,11 +43,21 @@ class App extends React.Component {
    }
 
    render() {
+      const { currentUser } = this.props;
       return (
          <div>
             <Header />
             <Switch>
                <Route exact path="/" component={HomePage} />
+               <Route
+                  path="/user/:id"
+                  render={(props) => (
+                     <UserProfilePageWithSpinner
+                        isLoading={!currentUser}
+                        {...props}
+                     />
+                  )}
+               />
                <Route path="/shop" component={ShopPage} />
                <Route exact path="/checkout" component={CheckoutPage} />
                <Route
